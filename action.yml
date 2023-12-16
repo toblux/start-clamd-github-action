@@ -1,0 +1,31 @@
+name: 'ClamAV Daemon'
+description: 'Start a ClamAV daemon (clamd) for antivirus scanning'
+author: 'Thorsten Blum'
+branding:
+  icon: server
+  color: blue
+runs:
+  using: composite
+  steps:
+    - name: Check out code
+      uses: actions/checkout@v4
+    # Linux
+    - name: Install and start ClamAV daemon on a Linux runner
+      if: ${{ runner.os == 'Linux' }}
+      shell: bash
+      run: |
+        sudo apt-get install clamav-daemon
+        clamd --config-file=${{ github.action_path }}/clamav/clamd.conf --datadir=${{ github.action_path }}/clamav/database/
+    # Windows
+    - name: Install and start ClamAV daemon on a Windows runner
+      if: ${{ runner.os == 'Windows' }}
+      env:
+        CLAMAV_WIN_VERSION: clamav-1.0.4.win.x64
+      shell: pwsh
+      run: |
+          curl -L -o clamav.zip https://www.clamav.net/downloads/production/${{ env.CLAMAV_WIN_VERSION }}.zip
+          tar -xf clamav.zip
+          cp -r ${{ github.action_path }}\clamav\database ${{ env.CLAMAV_WIN_VERSION }}
+          cp ${{ github.action_path }}\clamav\clamd.conf ${{ env.CLAMAV_WIN_VERSION }}
+          ${{ env.CLAMAV_WIN_VERSION }}\clamd.exe --install-service
+          net start clamd
