@@ -1,5 +1,5 @@
 name: ClamAV Daemon
-description: Start a ClamAV daemon clamd for antivirus scanning
+description: Start ClamAV daemon clamd for antivirus scanning
 author: Thorsten Blum
 branding:
   icon: server
@@ -19,12 +19,15 @@ runs:
   steps:
     - name: Check out code
       uses: actions/checkout@v4
-    - name: Create clamd.conf
+    - name: Configure clamd
       shell: bash
       run: |
-        echo LocalSocket ${{ inputs.unix_socket }} >> clamd.conf
         echo TCPSocket ${{ inputs.tcp_port }} >> clamd.conf
         echo StreamMaxLength ${{ inputs.stream_max_length }} >> clamd.conf
+    - name: Configure clamd (Linux and macOS only)
+      if: ${{ runner.os != 'Windows' }}
+      shell: bash
+      run: echo LocalSocket ${{ inputs.unix_socket }} >> clamd.conf
     # macOS
     - name: Install and start ClamAV daemon on a macOS runner
       if: ${{ runner.os == 'macOS' }}
