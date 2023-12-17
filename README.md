@@ -16,6 +16,10 @@ jobs:
     steps:
       - name: Start ClamAV daemon clamd
         uses: toblux/start-clamd-github-action@main
+        with: # Custom inputs are optional (these are the default values)
+          unix_socket: /tmp/clamd.socket
+          tcp_port: 3310
+          stream_max_length: 1M
       - name: Ping clamd on TCP port 3310
         run: echo PING | nc localhost 3310
       - name: Ping clamd using the Unix socket
