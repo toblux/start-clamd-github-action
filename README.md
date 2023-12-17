@@ -15,7 +15,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Start ClamAV daemon clamd
-        uses: toblux/start-clamd-github-action@main
+        uses: toblux/start-clamd-github-action@v0.1.0
         with: # Custom inputs are optional (these are the default values)
           unix_socket: /tmp/clamd.socket
           tcp_port: 3310
@@ -29,7 +29,7 @@ jobs:
     runs-on: windows-latest
     steps:
       - name: Start ClamAV daemon clamd
-        uses: toblux/start-clamd-github-action@main
+        uses: toblux/start-clamd-github-action@v0.1.0
       - name: Test the connection to clamd on TCP port 3310
         run: Test-NetConnection -ComputerName localhost -Port 3310
 ```
