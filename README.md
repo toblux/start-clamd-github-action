@@ -2,7 +2,7 @@
 
 This GitHub action starts a lightweight ClamAV daemon. For now, `clamd` only loads the `bytecode.cvd` database.
 
-On Linux, the server listens on TCP port 3310 and the Unix socket at `/tmp/clamd.socket`. On Windows, the server only listens on TCP port 3310.
+On Linux and macOS, the server listens on TCP port 3310 and the Unix socket at `/tmp/clamd.socket`. On Windows, the server only listens on TCP port 3310.
 
 ## Usage
 
