@@ -14,7 +14,7 @@ jobs:
   clamd_ubuntu:
     runs-on: ubuntu-latest
     steps:
-      - name: Start ClamAV daemon (clamd)
+      - name: Start ClamAV daemon clamd
         uses: toblux/start-clamd-github-action@main
       - name: Ping clamd on TCP port 3310
         run: echo PING | nc localhost 3310
@@ -24,7 +24,7 @@ jobs:
   clamd_windows:
     runs-on: windows-latest
     steps:
-      - name: Start ClamAV daemon (clamd)
+      - name: Start ClamAV daemon clamd
         uses: toblux/start-clamd-github-action@main
       - name: Test the connection to clamd on TCP port 3310
         run: Test-NetConnection -ComputerName localhost -Port 3310

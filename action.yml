@@ -1,5 +1,5 @@
 name: ClamAV Daemon
-description: Start a ClamAV daemon (clamd) for antivirus scanning
+description: Start a ClamAV daemon clamd for antivirus scanning
 author: Thorsten Blum
 branding:
   icon: server
