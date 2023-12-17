@@ -1,21 +1,37 @@
-name: 'ClamAV Daemon'
-description: 'Start a ClamAV daemon (clamd) for antivirus scanning'
-author: 'Thorsten Blum'
+name: ClamAV Daemon
+description: Start a ClamAV daemon (clamd) for antivirus scanning
+author: Thorsten Blum
 branding:
   icon: server
   color: blue
+inputs:
+  unix_socket:
+    description: The Unix socket file path
+    default: '/tmp/clamd.socket'
+  tcp_port:
+    description: The TCP port
+    default: '3310'
+  stream_max_length:
+    description: Streaming size limit
+    default: '1M'
 runs:
   using: composite
   steps:
     - name: Check out code
       uses: actions/checkout@v4
+    - name: Create clamd.conf
+      shell: bash
+      run: |
+        echo LocalSocket ${{ inputs.unix_socket }} >> clamd.conf
+        echo TCPSocket ${{ inputs.tcp_port }} >> clamd.conf
+        echo StreamMaxLength ${{ inputs.stream_max_length }} >> clamd.conf
     # Linux
     - name: Install and start ClamAV daemon on a Linux runner
       if: ${{ runner.os == 'Linux' }}
       shell: bash
       run: |
         sudo apt-get install clamav-daemon
-        clamd --config-file=${{ github.action_path }}/clamav/clamd.conf --datadir=${{ github.action_path }}/clamav/database/
+        clamd --config-file=clamd.conf --datadir=${{ github.action_path }}/clamav/database/
     # Windows
     - name: Install and start ClamAV daemon on a Windows runner
       if: ${{ runner.os == 'Windows' }}
@@ -23,9 +39,9 @@ runs:
         CLAMAV_WIN_VERSION: clamav-1.0.4.win.x64
       shell: pwsh
       run: |
-          curl -L -o clamav.zip https://www.clamav.net/downloads/production/${{ env.CLAMAV_WIN_VERSION }}.zip
-          tar -xf clamav.zip
-          cp -r ${{ github.action_path }}\clamav\database ${{ env.CLAMAV_WIN_VERSION }}
-          cp ${{ github.action_path }}\clamav\clamd.conf ${{ env.CLAMAV_WIN_VERSION }}
-          ${{ env.CLAMAV_WIN_VERSION }}\clamd.exe --install-service
-          net start clamd
+        curl -L -o clamav.zip https://www.clamav.net/downloads/production/${{ env.CLAMAV_WIN_VERSION }}.zip
+        tar -xf clamav.zip
+        cp -r ${{ github.action_path }}\clamav\database ${{ env.CLAMAV_WIN_VERSION }}
+        cp clamd.conf ${{ env.CLAMAV_WIN_VERSION }}
+        ${{ env.CLAMAV_WIN_VERSION }}\clamd.exe --install-service
+        net start clamd
