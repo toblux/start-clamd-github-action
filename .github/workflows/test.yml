@@ -2,6 +2,15 @@ name: Test action
 on: [push, pull_request]
 
 jobs:
+  clamd_macos:
+    runs-on: macos-latest
+    steps:
+      - name: Start ClamAV daemon (clamd)
+        uses: toblux/start-clamd-github-action@HEAD
+      - name: Ping clamd on TCP port 3310
+        run: echo PING | nc localhost 3310
+      - name: Ping clamd using the Unix socket
+        run: echo PING | nc -U /tmp/clamd.socket
   clamd_ubuntu:
     runs-on: ubuntu-latest
     steps:

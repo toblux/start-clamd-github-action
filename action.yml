@@ -25,6 +25,13 @@ runs:
         echo LocalSocket ${{ inputs.unix_socket }} >> clamd.conf
         echo TCPSocket ${{ inputs.tcp_port }} >> clamd.conf
         echo StreamMaxLength ${{ inputs.stream_max_length }} >> clamd.conf
+    # macOS
+    - name: Install and start ClamAV daemon on a macOS runner
+      if: ${{ runner.os == 'macOS' }}
+      shell: bash
+      run: |
+        brew install clamav
+        clamd --config-file=clamd.conf --datadir=${{ github.action_path }}/clamav/database/
     # Linux
     - name: Install and start ClamAV daemon on a Linux runner
       if: ${{ runner.os == 'Linux' }}
