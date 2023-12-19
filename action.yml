@@ -6,10 +6,10 @@ branding:
   color: blue
 inputs:
   unix_socket:
-    description: The Unix socket file path
+    description: Path to a Unix socket clamd will listen on
     default: /tmp/clamd.socket
   tcp_port:
-    description: The TCP port
+    description: TCP port clamd will listen on
     default: 3310
   stream_max_length:
     description: Streaming size limit
