@@ -19,39 +19,44 @@ runs:
   steps:
     - name: Check out code
       uses: actions/checkout@v4
-    - name: Configure clamd
+    - name: Configure freshclam and clamd
       shell: bash
       run: |
+        echo DatabaseMirror database.clamav.net >> freshclam.conf
         echo TCPSocket ${{ inputs.tcp_port }} >> clamd.conf
         echo StreamMaxLength ${{ inputs.stream_max_length }} >> clamd.conf
     - name: Configure clamd (Linux and macOS only)
-      if: ${{ runner.os != 'Windows' }}
+      if: runner.os != 'Windows'
       shell: bash
       run: echo LocalSocket ${{ inputs.unix_socket }} >> clamd.conf
     # macOS
-    - name: Install and start ClamAV daemon on a macOS runner
-      if: ${{ runner.os == 'macOS' }}
+    - name: Install and start ClamAV daemon on macOS
+      if: runner.os == 'macOS'
       shell: bash
       run: |
         brew install clamav
-        clamd --config-file=clamd.conf --datadir=${{ github.action_path }}/clamav/database/
+        freshclam -F --config-file=freshclam.conf --update-db=bytecode
+        clamd --config-file=clamd.conf
     # Linux
-    - name: Install and start ClamAV daemon on a Linux runner
-      if: ${{ runner.os == 'Linux' }}
+    - name: Install and start ClamAV daemon on Linux
+      if: runner.os == 'Linux'
       shell: bash
       run: |
         sudo apt-get install clamav-daemon
-        clamd --config-file=clamd.conf --datadir=${{ github.action_path }}/clamav/database/
+        sudo systemctl stop clamav-freshclam
+        sudo freshclam -F --update-db=bytecode
+        clamd --config-file=clamd.conf
     # Windows
-    - name: Install and start ClamAV daemon on a Windows runner
-      if: ${{ runner.os == 'Windows' }}
+    - name: Install and start ClamAV daemon on Windows
+      if: runner.os == 'Windows'
       env:
         CLAMAV_WIN_VERSION: clamav-1.0.4.win.x64
       shell: pwsh
       run: |
         curl -L -o clamav.zip https://www.clamav.net/downloads/production/${{ env.CLAMAV_WIN_VERSION }}.zip
         tar -xf clamav.zip
-        cp -r ${{ github.action_path }}\clamav\database ${{ env.CLAMAV_WIN_VERSION }}
         cp clamd.conf ${{ env.CLAMAV_WIN_VERSION }}
+        cp freshclam.conf ${{ env.CLAMAV_WIN_VERSION }}
+        ${{ env.CLAMAV_WIN_VERSION }}\freshclam.exe -F --update-db=bytecode
         ${{ env.CLAMAV_WIN_VERSION }}\clamd.exe --install-service
         net start clamd
