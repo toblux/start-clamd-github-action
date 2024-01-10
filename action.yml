@@ -42,6 +42,7 @@ runs:
       if: runner.os == 'Linux'
       shell: bash
       run: |
+        sudo apt-get update
         sudo apt-get install clamav-daemon
         sudo systemctl stop clamav-freshclam
         sudo freshclam -F --update-db=bytecode
