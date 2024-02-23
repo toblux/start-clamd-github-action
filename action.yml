@@ -15,8 +15,8 @@ inputs:
     description: Streaming size limit
     default: 1M
   log_verbose:
-    description: Enable verbose logging (yes or no)
-    default: no
+    description: Enable verbose logging
+    default: false
   log_file:
     description: Enable logging to the selected file
     required: false
