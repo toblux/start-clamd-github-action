@@ -14,6 +14,9 @@ inputs:
   stream_max_length:
     description: Streaming size limit
     default: 1M
+  log_verbose:
+    description: Enable verbose logging (yes or no)
+    default: no
   log_file:
     description: Enable logging to the selected file
     required: false
@@ -29,6 +32,7 @@ runs:
         echo DatabaseMirror database.clamav.net >> freshclam.conf
         echo TCPSocket ${{ inputs.tcp_port }} >> clamd.conf
         echo StreamMaxLength ${{ inputs.stream_max_length }} >> clamd.conf
+        echo LogVerbose ${{ inputs.log_verbose }} >> clamd.conf
     - name: Add log file if needed
       if: ${{ inputs.log_file != '' }}
       shell: bash

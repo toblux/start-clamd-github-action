@@ -22,6 +22,7 @@ jobs:
         uses: ./
         with:
           log_file: /tmp/clamd.log
+          log_verbose: yes
       - name: Ping clamd on TCP port 3310
         run: echo PING | nc localhost 3310
       - name: Ping clamd using the Unix socket
