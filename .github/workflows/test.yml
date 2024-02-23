@@ -26,6 +26,8 @@ jobs:
         run: echo PING | nc localhost 3310
       - name: Ping clamd using the Unix socket
         run: echo PING | nc -U /tmp/clamd.socket
+      - name: Check log file
+        run: cat /tmp/clamd.log
   clamd_windows:
     runs-on: windows-latest
     steps:
