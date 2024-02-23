@@ -20,6 +20,8 @@ jobs:
         uses: actions/checkout@v4
       - name: Start ClamAV daemon clamd
         uses: ./
+        with:
+          log_file: /tmp/clamd.log
       - name: Ping clamd on TCP port 3310
         run: echo PING | nc localhost 3310
       - name: Ping clamd using the Unix socket
