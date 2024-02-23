@@ -21,6 +21,9 @@ inputs:
     description: Enable logging to the selected file
     required: false
     type: string
+  debug:
+    description: Enable debug messages from libclamav
+    default: false
 runs:
   using: composite
   steps:
@@ -33,6 +36,7 @@ runs:
         echo TCPSocket ${{ inputs.tcp_port }} >> clamd.conf
         echo StreamMaxLength ${{ inputs.stream_max_length }} >> clamd.conf
         echo LogVerbose ${{ inputs.log_verbose }} >> clamd.conf
+        echo Debug ${{ inputs.debug }} >> clamd.conf
     - name: Add log file if needed
       if: ${{ inputs.log_file != '' }}
       shell: bash
