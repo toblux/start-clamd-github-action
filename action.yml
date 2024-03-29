@@ -22,10 +22,10 @@ inputs:
     required: false
     type: string
   db_main:
-    description: Load the "main" virus database
+    description: Download the "main" virus database (> 160 MB)
     default: false
   db_daily:
-    description: Load the "daily" virus database
+    description: Download the "daily" virus database (> 60 MB)
     default: false
   debug:
     description: Enable debug messages from libclamav
