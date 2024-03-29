@@ -84,6 +84,8 @@ runs:
         tar -xf clamav.zip
         cp clamd.conf ${{ env.CLAMAV_WIN_VERSION }}
         cp freshclam.conf ${{ env.CLAMAV_WIN_VERSION }}
-        ${{ env.CLAMAV_WIN_VERSION }}\freshclam.exe -F --update-db=bytecode
+        ${{ env.CLAMAV_WIN_VERSION }}\freshclam.exe -F --update-db=bytecode `
+          $(if ("${{ inputs.db_main }}" -eq "true") { "--update-db=main" }) `
+          $(if ("${{ inputs.db_daily }}" -eq "true") { "--update-db=daily" })
         ${{ env.CLAMAV_WIN_VERSION }}\clamd.exe --install-service
         net start clamd
