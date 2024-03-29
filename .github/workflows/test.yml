@@ -32,7 +32,6 @@ jobs:
       - name: Start ClamAV daemon
         uses: ./
         with:
-          db_main: true
           db_daily: true
       - name: Test the connection to clamd on TCP port 3310
         run: Test-NetConnection -ComputerName localhost -Port 3310
