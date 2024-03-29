@@ -13,6 +13,8 @@ jobs:
         run: echo PING | nc localhost 3310
       - name: Ping clamd using the Unix socket
         run: echo PING | nc -U /tmp/clamd.socket
+      - name: Shut down clamd
+        run: echo SHUTDOWN | nc localhost 3310
   clamd_ubuntu:
     runs-on: ubuntu-latest
     steps:
@@ -24,6 +26,8 @@ jobs:
         run: echo PING | nc localhost 3310
       - name: Ping clamd using the Unix socket
         run: echo PING | nc -U /tmp/clamd.socket
+      - name: Shut down clamd
+        run: echo SHUTDOWN | nc localhost 3310
   clamd_windows:
     runs-on: windows-latest
     steps:
