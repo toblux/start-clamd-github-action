@@ -21,6 +21,12 @@ inputs:
     description: Enable logging to the selected file
     required: false
     type: string
+  db_main:
+    description: Load the "main" virus database
+    default: false
+  db_daily:
+    description: Load the "daily" virus database
+    default: false
   debug:
     description: Enable debug messages from libclamav
     default: false
@@ -61,7 +67,9 @@ runs:
         sudo apt-get update
         sudo apt-get install clamav-daemon
         sudo systemctl stop clamav-freshclam
-        sudo freshclam -F --update-db=bytecode
+        sudo freshclam -F --update-db=bytecode \
+          $([ ${{ inputs.db_main }} = true ] && echo "--update-db=main") \
+          $([ ${{ inputs.db_daily }} = true ] && echo "--update-db=daily")
         clamd --config-file=clamd.conf
     # Windows
     - name: Install and start ClamAV daemon on Windows
