@@ -10,7 +10,6 @@ jobs:
       - name: Start ClamAV daemon
         uses: ./
         with:
-          db_main: true
           db_daily: true
       - name: Ping clamd on TCP port 3310
         run: echo PING | nc localhost 3310
@@ -24,7 +23,6 @@ jobs:
       - name: Start ClamAV daemon
         uses: ./
         with:
-          db_main: true
           db_daily: true
       - name: Ping clamd on TCP port 3310
         run: echo PING | nc localhost 3310
