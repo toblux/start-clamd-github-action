@@ -57,7 +57,9 @@ runs:
       shell: bash
       run: |
         brew install clamav
-        freshclam -F --config-file=freshclam.conf --update-db=bytecode
+        freshclam -F --config-file=freshclam.conf --update-db=bytecode \
+          $([ ${{ inputs.db_main }} = true ] && echo "--update-db=main") \
+          $([ ${{ inputs.db_daily }} = true ] && echo "--update-db=daily")
         clamd --config-file=clamd.conf
     # Linux
     - name: Install and start ClamAV daemon on Linux
