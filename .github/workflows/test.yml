@@ -37,12 +37,3 @@ jobs:
         uses: ./
       - name: Test the connection to clamd on TCP port 3310
         run: Test-NetConnection -ComputerName localhost -Port 3310
-  clamd_windows_issue_1:
-    runs-on: windows-latest
-    steps:
-      - name: Check out code
-        uses: actions/checkout@v4
-      - name: Start ClamAV daemon
-        uses: ./
-      - name: Check out code again
-        uses: actions/checkout@v4
