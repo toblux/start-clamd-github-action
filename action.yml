@@ -78,18 +78,15 @@ runs:
       if: runner.os == 'Windows'
       env:
         CLAMAV_WIN_VERSION: clamav-1.0.4.win.x64
-        DB_MAIN: ${{ inputs.db_main }}
-        DB_DAILY: ${{ inputs.db_daily }}
       shell: pwsh
       run: |
         $clamavDir = Join-Path $env:RUNNER_TEMP $env:CLAMAV_WIN_VERSION
         $clamavZipFilePath = Join-Path $env:RUNNER_TEMP clamav.zip
         Invoke-WebRequest -Uri "https://www.clamav.net/downloads/production/$env:CLAMAV_WIN_VERSION.zip" -OutFile $clamavZipFilePath
         Expand-Archive -Path $clamavZipFilePath -DestinationPath $env:RUNNER_TEMP
-        Copy-Item clamd.conf -Destination $clamavDir
-        Copy-Item freshclam.conf -Destination $clamavDir
+        Copy-Item -Path clamd.conf, freshclam.conf -Destination $clamavDir
         & "$clamavDir\freshclam.exe" -F --update-db=bytecode `
-          $(if ($env:DB_MAIN -eq "true") { "--update-db=main" }) `
-          $(if ($env:DB_DAILY -eq "true") { "--update-db=daily" })
+          $(if ("${{ inputs.db_main }}" -eq "true") { "--update-db=main" }) `
+          $(if ("${{ inputs.db_daily }}" -eq "true") { "--update-db=daily" })
         & "$clamavDir\clamd.exe" --install-service
         net start clamd
