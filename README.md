@@ -1,8 +1,8 @@
 # Start ClamAV Daemon GitHub Action
 
-This GitHub action starts a lightweight ClamAV daemon. For now, `clamd` only loads the `bytecode.cvd` database. It works on Linux, macOS, and Windows runners.
+This GitHub action starts a lightweight ClamAV daemon. By default, `clamd` loads only the `bytecode` database, but the `main` and `daily` databases can be enabled if needed.
 
-On Linux and macOS, `clamd` listens on TCP port 3310 and the Unix socket at `/tmp/clamd.socket`. On Windows, `clamd` listens on TCP port 3310.
+The action works on Linux, macOS, and Windows runners. On Linux and macOS, `clamd` listens on TCP port 3310 and the Unix socket at `/tmp/clamd.socket`. On Windows, `clamd` listens on TCP port 3310.
 
 ## Inputs
 
