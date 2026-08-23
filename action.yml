@@ -27,6 +27,9 @@ inputs:
   db_daily:
     description: Download the "daily" virus database (> 60 MB)
     default: false
+  db_dir:
+    description: Relative path to custom database directory
+    required: false
   debug:
     description: Enable debug messages from libclamav
     default: false
@@ -43,6 +46,15 @@ runs:
         echo StreamMaxLength ${{ inputs.stream_max_length }} >> clamd.conf
         echo LogVerbose ${{ inputs.log_verbose }} >> clamd.conf
         echo Debug ${{ inputs.debug }} >> clamd.conf
+    - name: Set relative path to custom database directory
+      if: inputs.db_dir != ''
+      shell: bash
+      env:
+        DB_DIR: ${{ github.workspace }}/${{ inputs.db_dir }}
+      run: |
+        [[ $RUNNER_OS == Windows ]] && DB_DIR=$(cygpath -w "$DB_DIR")
+        printf 'DatabaseDirectory "%s"\n' "$DB_DIR" >> freshclam.conf
+        printf 'DatabaseDirectory "%s"\n' "$DB_DIR" >> clamd.conf
     - name: Add log file if needed
       if: ${{ inputs.log_file != '' }}
       shell: bash
