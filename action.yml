@@ -81,7 +81,9 @@ runs:
         sudo apt-get update
         sudo apt-get install clamav-daemon
         sudo systemctl stop clamav-freshclam
-        sudo freshclam -F --update-db=bytecode \
+        sudo apparmor_parser -R /etc/apparmor.d/usr.bin.freshclam
+        sudo chown -R $(id -u):$(id -g) /var/lib/clamav
+        freshclam -F --config-file=freshclam.conf --update-db=bytecode \
           $([ ${{ inputs.db_main }} = true ] && echo "--update-db=main") \
           $([ ${{ inputs.db_daily }} = true ] && echo "--update-db=daily")
         clamd --config-file=clamd.conf
