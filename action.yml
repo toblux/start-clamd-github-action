@@ -90,7 +90,7 @@ runs:
     - name: Install and start ClamAV daemon on Windows
       if: runner.os == 'Windows'
       env:
-        CLAMAV_WIN_VERSION: clamav-1.0.4.win.x64
+        CLAMAV_WIN_VERSION: clamav-1.4.6.win.x64
       shell: pwsh
       run: |
         $clamavDir = Join-Path $env:RUNNER_TEMP $env:CLAMAV_WIN_VERSION
