@@ -20,7 +20,6 @@ inputs:
   log_file:
     description: Enable logging to the selected file
     required: false
-    type: string
   db_main:
     description: Download the "main" virus database (> 160 MB)
     default: false
@@ -55,8 +54,8 @@ runs:
         [[ $RUNNER_OS == Windows ]] && DB_DIR=$(cygpath -w "$DB_DIR")
         printf 'DatabaseDirectory "%s"\n' "$DB_DIR" >> freshclam.conf
         printf 'DatabaseDirectory "%s"\n' "$DB_DIR" >> clamd.conf
-    - name: Add log file if needed
-      if: ${{ inputs.log_file != '' }}
+    - name: Set custom log file
+      if: inputs.log_file != ''
       shell: bash
       run: echo LogFile ${{ inputs.log_file }} >> clamd.conf
     - name: Configure clamd (Linux and macOS only)
